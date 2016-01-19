@@ -30,8 +30,10 @@ public class ProncovoLambda {
     @Inject
     FoursquareService foursquare;
 
-    @LambadaFunction(name="pcv_direction_lookup", memorySize = 512, description="Venue Lookup by Address", timeout=60)
+    @LambadaFunction(name="pcv_direction_lookup", memorySize = 512, description="Venue Lookup by Address", timeout=15)
     public void invokeLookup(InputStream inputStream, OutputStream outputStream, Context ctx) throws Exception {
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "32");
+
         Guice.createInjector(new CoreModule()).injectMembers(this);
 
         String address = objectMapper.readValue(inputStream, String.class);
